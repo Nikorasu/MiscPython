@@ -30,3 +30,11 @@ using Pygame instead of ascii. The _save version outputs timestamped images.
 This is a little typing-speed-test I wrote, after seeing someone make something
 similar using Curses. I wanted to try doing it without Curses, and it worked!
 `typingwpm.py` should be entirely portable, `wpmtest_wgetch.py` needs getchlib.
+Works well, but there's a small bug if user presses 2 buttons at once rapidly.
+
+---
+
+If you like my projects and want to help me keep making more,
+please consider donating on [my Ko-fi page](https://ko-fi.com/nik85)! Thanks!
+
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F4GRRWB)
