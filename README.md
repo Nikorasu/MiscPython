@@ -20,5 +20,13 @@ together in rows, coloring digits which overlap in either 2 or all 3 rows.
 ---
 ## Spectrogram
 
+I put this together while learning to use sounddevice & numpy's fft function.
+It's essentially just a reimplementation of sounddevice's spectrogram example,
+using Pygame instead of ascii. The _save version outputs timestamped images.
+
 ---
 ## TypingWPM
+
+This is a little typing-speed-test I wrote, after seeing someone make something
+similar using Curses. I wanted to try doing it without Curses, and it worked!
+`typingwpm.py` should be entirely portable, `wpmtest_wgetch.py` needs getchlib.
