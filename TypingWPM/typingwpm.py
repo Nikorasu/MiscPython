@@ -8,7 +8,7 @@
 import tty, termios, sys, time, random
 from difflib import SequenceMatcher
 
-def getch():
+def getch(): # Gets a single character from the user, without requiring the user to press enter.
     old_settings = termios.tcgetattr(sys.stdin) # get current terminal settings
     try:
         tty.setcbreak(sys.stdin) # change terminal settings #tty.setraw(fd) #fd=sys.stdin.fileno()
@@ -24,8 +24,8 @@ print('\x1b[36mBegin typing when ready..\x1b[0m')
 randPan = random.choice(pangrams) # pick a random pangram
 print(randPan,end='\x0D') # print the pangram and move cursor to beginning of line
 
-startTime = pos = 0
-typedPan = ''
+startTime = pos = 0 # start time, position in pangram
+typedPan = '' # user's typed pangram
 
 while 1:
     if pos == 1 and startTime == 0: # start the timer when the user starts typing
@@ -34,8 +34,8 @@ while 1:
     key = getch()
     if key in ('\x1b',chr(10)) or pos == len(randPan): break # Enter or Esc, or reached end
     elif key == chr(127) and pos > 0: # backspace
-        pos -= 1
-        typedPan = typedPan[:-1]
+        pos -= 1  # subtract 1 from position
+        typedPan = typedPan[:-1] # remove last character from typedPan
         print(f'\x1b[0m\b{randPan[pos]}\b',end='',flush=True)  #'\x1b[D'
     elif key.isalnum() or key in (' ',',','.',"'",'?','!','-'):  #pos < len(randPan)
         if key == randPan[pos]: print('\x1b[32m'+key,end='',flush=True) # green
