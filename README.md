@@ -30,7 +30,7 @@ using Pygame instead of ascii. The _save version outputs timestamped images.
 This is a little typing-speed-test I wrote, after seeing someone make something
 similar using Curses. I wanted to try doing it without Curses, and it worked!
 `typingwpm.py` should be pretty portable, just needs the `pangrams.txt` file.
-Works well, but there's a small bug if user presses 2 buttons at once rapidly.
+##### Note: Slower terminals may glitch if user presses 2 buttons at same time.
 
 ---
 
