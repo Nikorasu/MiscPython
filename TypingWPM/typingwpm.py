@@ -46,7 +46,7 @@ timeElapsed = endTime - startTime
 wpm = round((len(typedPan)/5)/(timeElapsed/60),1) # 5 characters per word on average
 accuracy = round(SequenceMatcher(None,randPan,typedPan).ratio()*100,1)
 
-if len(typedPan) > len(randPan)-5:
+if len(typedPan) > len(randPan)/2:
     print(f'\nWPM: {wpm}  Accuracy: ~{accuracy}%')
 else:
     print('\nTyping incomplete..')
