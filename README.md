@@ -3,6 +3,7 @@
 This is a collection of my smaller Python projects that don't fit elsewhere.
 
 ---
+
 ## CalcPi
 
 These are scripts I wrote to play with and visualize generating digits of Pi.
@@ -18,6 +19,7 @@ Using the generator function by [GavalasDev](https://github.com/GavalasDev),
 together in rows, coloring digits which overlap in either 2 or all 3 rows.
 
 ---
+
 ## Spectrogram
 
 I put this together while learning to use sounddevice & numpy's fft function.
@@ -25,12 +27,14 @@ It's essentially just a reimplementation of sounddevice's spectrogram example,
 using Pygame instead of ascii. The _save version outputs timestamped images.
 
 ---
+
 ## TypingWPM
 
 This is a little typing-speed-test I wrote, after seeing someone make something
 similar using Curses. I wanted to try doing it without Curses, and it worked!
 `typingwpm.py` should be pretty portable, just needs the `pangrams.txt` file.
-##### Note: Slower terminals may glitch if user presses 2 buttons at same time.
+
+*Note: Slower terminals may bug if rapidly pressing 2 keys at the same time.*
 
 ---
 
