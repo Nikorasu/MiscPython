@@ -18,40 +18,40 @@ class MatrixColumn:
         self.prechar = ''
         self.done = False
     def update(self):
-        character = random.choice(string.printable.strip())
         if 0 < self.start <= self.termH+2: # if start is on screen
+            character = random.choice(string.printable.strip())
             print(f'{highlight}\x1b[{self.start};{self.column}H{character}',end='\b',flush=True)
             print(f'{random.choice(color)}\x1b[{self.start-1};{self.column}H{self.prechar}',end='\b',flush=True)
             if self.speed == 2: # if double speed
                 altchar = random.choice(string.printable.strip())
                 print(f'{random.choice(color)}\x1b[{self.start-1};{self.column}H{altchar}',end='\b',flush=True)
                 print(f'{random.choice(color)}\x1b[{self.start-2};{self.column}H{self.prechar}',end='\b',flush=True)
+            self.prechar = character
         if self.termH >= self.end > -1: # if end is on screen
             print(f'\x1b[{self.end};{self.column}H ',end='\b',flush=True)
             if self.speed == 2: # if double speed
                 print(f'\x1b[{self.end+1};{self.column}H ',end='\b',flush=True)
         self.start += self.speed 
         self.end += self.speed
-        self.prechar = character
         if self.end > self.termH: self.done = True # if end is off screen
 
 print('\x1b[2J') # clear screen
 chains = []
 taken = set()
 termW = os.get_terminal_size().columns
-for i in range(int(termW*.7)):
-    while (column := random.randint(1,termW)) in taken: pass
-    taken.add(column)
-    chains.append(MatrixColumn(column))
+for i in range(int(termW*.7)): # fill 70% of the terminal width with MatrixColumns
+    while (column := random.randint(1,termW)) in taken: pass # ensures no overlappping columns
+    chains.append(MatrixColumn(column)) # spawn MatrixColumn at open column, add to list for updating
+    taken.add(column) # add column to taken set
 
-while 1:
+while 1: # main loop
     for mcol in chains:
         mcol.update()
-        if mcol.done:
+        if mcol.done: # if MatrixColumn has finished falling, remove it and spawn a new one
             taken.remove(mcol.column)
             chains.remove(mcol)
             termW = os.get_terminal_size().columns
             while (column := random.randint(1,termW)) in taken: pass
-            taken.add(column)
             chains.append(MatrixColumn(column))
+            taken.add(column)
     time.sleep(0.1)
