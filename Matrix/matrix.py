@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-# Matrix code-rain terminal animation
-# by Nik Stromberg - nikorasu85@gmail.com - MIT 2022 - copilot
+# A basic Matrix code-rain terminal animation.
+# by Nik Stromberg - nikorasu85@gmail.com - MIT 2023
 
 import random, os, string, time
 
@@ -12,28 +12,28 @@ class MatrixColumn:
     def __init__(self, column):
         self.column = column
         self.termH = os.get_terminal_size().lines # get terminal height
-        self.start = -random.randint(0,self.termH) #self.start = 0 #self.end = -random.randint(3,self.termH)
-        self.end = self.start - random.randint(3,self.termH) #-random.randint(-self.start, self.termH)
-        self.speed = random.choice([1,1,2])
+        self.start = -random.randint(0,self.termH) # random start position
+        self.end = self.start - random.randint(3,self.termH) # random end position
+        self.speed = random.choice([1,1,2]) # 1/3 chance of double speed
         self.prechar = ''
-        self.fastchar = ''
         self.done = False
     def update(self):
         character = random.choice(string.printable.strip())
-        if 0 < self.start <= self.termH+2:
+        if 0 < self.start <= self.termH+2: # if start is on screen
             print(f'{highlight}\x1b[{self.start};{self.column}H{character}',end='\b',flush=True)
             print(f'{random.choice(color)}\x1b[{self.start-1};{self.column}H{self.prechar}',end='\b',flush=True)
-            if self.speed == 2:
-                print(f'{random.choice(color)}\x1b[{self.start-2};{self.column}H{self.fastchar}',end='\b',flush=True)
-        if self.termH >= self.end > -1:
+            if self.speed == 2: # if double speed
+                altchar = random.choice(string.printable.strip())
+                print(f'{random.choice(color)}\x1b[{self.start-1};{self.column}H{altchar}',end='\b',flush=True)
+                print(f'{random.choice(color)}\x1b[{self.start-2};{self.column}H{self.prechar}',end='\b',flush=True)
+        if self.termH >= self.end > -1: # if end is on screen
             print(f'\x1b[{self.end};{self.column}H ',end='\b',flush=True)
-            if self.speed == 2:
+            if self.speed == 2: # if double speed
                 print(f'\x1b[{self.end+1};{self.column}H ',end='\b',flush=True)
-        self.start += self.speed
+        self.start += self.speed 
         self.end += self.speed
-        self.fastchar = self.prechar
         self.prechar = character
-        if self.end > self.termH: self.done = True
+        if self.end > self.termH: self.done = True # if end is off screen
 
 print('\x1b[2J') # clear screen
 chains = []
