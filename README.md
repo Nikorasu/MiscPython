@@ -20,6 +20,12 @@ together in rows, coloring digits which overlap in either 2 or all 3 rows.
 
 ---
 
+## Matrix
+
+This is my attempt to make a Matrix code-rain animation for the terminal.
+
+---
+
 ## Spectrogram
 
 I put this together while learning to use sounddevice & numpy's fft function.
@@ -34,7 +40,7 @@ This is a little typing-speed-test I wrote, after seeing someone make something
 similar using Curses. I wanted to try doing it without Curses, and it worked!
 `typingwpm.py` should be pretty portable, just needs the `pangrams.txt` file.
 
-*Note: Slower terminals may bug if rapidly pressing 2 keys at the same time.*
+*Note: Slower terminals may bug after rapidly pressing 2 keys at the same time.*
 
 ---
 
