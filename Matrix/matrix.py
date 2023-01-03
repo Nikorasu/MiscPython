@@ -12,7 +12,7 @@ class MatrixColumn:
     def __init__(self, column):
         self.column = column
         self.start = -random.randint(0,os.get_terminal_size().lines) # random start position
-        self.end = self.start - random.randint(3,os.get_terminal_size().lines) # random end position
+        self.end = self.start-random.randint(3,os.get_terminal_size().lines) # random end position
         self.speed = random.choice([1,1,2]) # 1/3 chance of double speed
         self.prechar = ''
         self.done = False
@@ -40,7 +40,7 @@ print('\x1b[2J') # clear screen
 
 while 1: # main loop
     termW = os.get_terminal_size().columns
-    for i in range(int(termW*.7) - len(chains)): # fill 70% of the terminal width with MatrixColumns
+    for i in range(int(termW*.8)-len(chains)): # fill 80% of the terminal width with MatrixColumns
         while (column := random.randint(1,termW)) in taken: pass # ensures no overlappping columns
         chains.append(MatrixColumn(column)) # spawn MatrixColumn at open column, add to list for updating
         taken.add(column) # add column to taken set
