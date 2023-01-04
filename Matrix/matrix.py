@@ -36,7 +36,7 @@ class MatrixColumn:
 
 chains = []
 taken = set()
-print('\x1b[2J') # clear screen
+print('\x1b[2J\x1b[?25l') # clear screen and hide cursor
 
 while 1: # main loop
     termW = os.get_terminal_size().columns
@@ -49,4 +49,4 @@ while 1: # main loop
         if mcol.done: # remove MatrixColumns when they finish falling
             taken.remove(mcol.column)
             chains.remove(mcol)
-    time.sleep(0.1)
+    time.sleep(.1)
