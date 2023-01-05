@@ -35,18 +35,18 @@ class MatrixColumn:
         if self.end > termH: self.done = True # if end is off screen
 
 chains = []
-taken = set()
+unused = set(range(1,os.get_terminal_size().columns)) # set of unused columns
 print('\x1b[2J\x1b[?25l') # clear screen and hide cursor
 
 while 1: # main loop
     termW = os.get_terminal_size().columns
-    for i in range(int(termW*.8)-len(chains)): # fill 80% of the terminal width with MatrixColumns
-        while (column := random.randint(1,termW)) in taken: pass # ensures no overlappping columns
-        chains.append(MatrixColumn(column)) # spawn MatrixColumn at open column, add to list for updating
-        taken.add(column) # add column to taken set
+    for i in range(int(termW*.85)-len(chains)): # fill 85% of the terminal width with MatrixColumns
+        column = random.choice(list(unused)) # pick a random unused column
+        chains.append(MatrixColumn(column)) # spawn MatrixColumn at unused column, add to list for updating
+        unused.remove(column) # remove column from unused set
     for mcol in chains:
         mcol.update()
         if mcol.done: # remove MatrixColumns when they finish falling
-            taken.remove(mcol.column)
+            unused.add(mcol.column) # add now unused column back to unused set
             chains.remove(mcol)
     time.sleep(.1)

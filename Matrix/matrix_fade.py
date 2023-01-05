@@ -22,7 +22,7 @@ class MatrixColumn:
                 if self.start-i-1 > 0:
                     brightness = 255-int(255*((i+1)/self.end)**2) if i+1 < self.end else 0
                     print(f'\x1b[0m\x1B[38;2;0;{brightness};0m\x1b[{self.start-i-1};{self.column}H{self.characters[i]}',end='\b',flush=True)
-            self.characters.insert(0,random.choice(['','\x1b[1m','\x1b[2m'])+newchar)
+            self.characters.insert(0,random.choice(['','','\x1b[1m','\x1b[2m'])+newchar)
             if self.speed == 2: # if double speed
                 addchar = random.choice(string.printable.strip())
                 self.characters.insert(1,addchar)
@@ -32,18 +32,19 @@ class MatrixColumn:
         if self.start-len(self.characters) > termH: self.done = True # if end is off screen
 
 chains = []
-taken = set()
+unused = set(range(1,os.get_terminal_size().columns)) # set of unused columns
 print('\x1b[2J\x1b[?25l') # clear screen and hide cursor
 
 while 1: # main loop
     termW = os.get_terminal_size().columns
-    for i in range(int(termW*.8)-len(chains)): # fill 80% of the terminal width with MatrixColumns
-        while (column := random.randint(1,termW)) in taken: pass # ensures no overlappping columns
-        chains.append(MatrixColumn(column)) # spawn MatrixColumn at open column, add to list for updating
-        taken.add(column) # add column to taken set
+    for i in range(int(termW*.85)-len(chains)): # fill 85% of the terminal width with MatrixColumns
+        column = random.choice(list(unused)) # pick a random unused column
+        #while (column := random.randint(1,termW)) in taken: pass # ensures no overlappping columns (inefficient)
+        chains.append(MatrixColumn(column)) # spawn MatrixColumn at unused column, add to list for updating
+        unused.remove(column) # remove column from unused set  old:taken.add(column)
     for mcol in chains:
         mcol.update()
         if mcol.done: # remove MatrixColumns when they finish falling
-            taken.remove(mcol.column)
+            unused.add(mcol.column) # add now unused column back to unused set  old:taken.remove(mcol.column)
             chains.remove(mcol)
     time.sleep(.08)
