@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # A basic Matrix code-rain terminal animation.
-# by Nik Stromberg - nikorasu85@gmail.com - MIT 2023
+# by Nik Stromberg - nikorasu85@gmail.com - MIT 2022
 
 COLOR = ['\x1b[32m','\x1b[92m'] # green
 HIGHLIGHT = '\x1b[97m' # white
