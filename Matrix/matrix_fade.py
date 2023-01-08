@@ -3,6 +3,9 @@
 # A basic Matrix code-rain terminal animation, with fade effect.
 # by Nik Stromberg - nikorasu85@gmail.com - MIT 2023
 
+DENSITY = 0.80 # percentage of terminal width to fill (default 0.80)
+MOVERATE = 0.08 # seconds between updates (default 0.08) lower is faster
+
 import random, os, string, time
 
 class MatrixColumn:
@@ -39,7 +42,7 @@ try:
     while 1: # main loop
         FullCols = set(range(1,termW := os.get_terminal_size().columns)) # set of all columns, & store terminal width
         if unused.union(taken) != FullCols: unused = FullCols - taken # accounts for terminal resizing
-        for i in range(int(termW*.8)-len(chains)): # fill 80% of the terminal width with MatrixColumns
+        for i in range(int(termW*DENSITY)-len(chains)): # fill 80% of the terminal width with MatrixColumns
             column = random.choice(list(unused)) # pick a random unused column
             chains.append(MatrixColumn(column)) # create a new MatrixColumn in that column
             taken.add(column) # add column to taken set
@@ -50,5 +53,5 @@ try:
                 taken.remove(mcol.column) # remove column from taken set
                 if mcol.column <= termW: unused.add(mcol.column) # add now unused column back to unused set
                 chains.remove(mcol) # remove finished MatrixColumn from list
-        time.sleep(.08)
+        time.sleep(MOVERATE) # controls the speed of the animation
 except KeyboardInterrupt: print('\x1b[2J\x1b[0m\x1b[?25h') # reset terminal and show cursor on ctrl+c
