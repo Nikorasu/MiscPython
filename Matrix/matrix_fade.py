@@ -42,13 +42,13 @@ try:
     while 1: # main loop
         FullCols = set(range(1,termW := os.get_terminal_size().columns)) # set of all columns, & store terminal width
         if unused.union(taken) != FullCols: unused = FullCols - taken # accounts for terminal resizing
-        for i in range(int(termW*DENSITY)-len(chains)): # fill 80% of the terminal width with MatrixColumns
+        for i in range(int(termW*DENSITY)-len(chains)): # fill Density% of the terminal width with MatrixColumns
             column = random.choice(list(unused)) # pick a random unused column
             chains.append(MatrixColumn(column)) # create a new MatrixColumn in that column
             taken.add(column) # add column to taken set
             unused.remove(column) # remove column from unused set
         for mcol in chains: # loop through all MatrixColumns
-            mcol.update() # run update function in MatrixColumn
+            mcol.update() # run update function in each MatrixColumn
             if mcol.done: # remove MatrixColumns when they finish falling
                 taken.remove(mcol.column) # remove column from taken set
                 if mcol.column <= termW: unused.add(mcol.column) # add now unused column back to unused set

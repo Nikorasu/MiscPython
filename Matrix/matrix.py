@@ -5,7 +5,7 @@
 
 COLOR = ['\x1b[32m','\x1b[92m'] # green
 HIGHLIGHT = '\x1b[97m' # white
-DENSITY = 0.85 # percentage of terminal width to fill (default 0.85)
+DENSITY = 0.80 # percentage of terminal width to fill (default 0.80)
 MOVERATE = 0.1 # seconds between updates (default 0.1) lower is faster
 
 import random, os, string, time
@@ -43,12 +43,12 @@ print('\x1b[2J\x1b[?25l') # clear screen and hide cursor
 try:
     while 1: # main loop
         termW = os.get_terminal_size().columns
-        for i in range(int(termW*DENSITY)-len(chains)): # fill 85% of the terminal width with MatrixColumns
+        for i in range(int(termW*DENSITY)-len(chains)): # fill Density% of the terminal width with MatrixColumns
             while (column := random.randint(1,termW)) in taken: pass # ensures no overlappping columns (inefficient)
             chains.append(MatrixColumn(column)) # spawn MatrixColumn at unused column, add to list for updating
             taken.add(column) # add column to taken set
         for mcol in chains: # loop through all MatrixColumns
-            mcol.update() # run update function in MatrixColumn
+            mcol.update() # run update function in each MatrixColumn
             if mcol.done: # remove MatrixColumns when they finish falling
                 taken.remove(mcol.column) # remove column from taken set
                 chains.remove(mcol) # then remove it from update list
