@@ -14,25 +14,25 @@ class MatrixColumn:
         self.start = -random.randint(0,os.get_terminal_size().lines) # random start position
         self.end = random.randint(5,os.get_terminal_size().lines) # random end length
         self.speed = random.choice([1,1,2]) # 1/3 chance of double speed
-        self.characters = random.choices(string.printable.strip(),k=self.end)
+        self.characters = random.choices(string.printable.strip(),k=self.end) # randomize starting chain of characters
         self.done = False
     def update(self):
         termH = os.get_terminal_size().lines # get terminal height
         if 0 < self.start <= termH+len(self.characters): # if start is on screen
-            newchar = random.choice(string.printable.strip())
+            newchar = random.choice(string.printable.strip()) # new random character to add
             print(f'\x1b[0m\x1b[97m\x1b[{self.start};{self.column}H{newchar}',end='\b',flush=True)
             for i, char in enumerate(self.characters): # loop through all characters
                 if self.start-i-1 > 0: # if characters are on screen
-                    brightness = 255-int(255*((i+1)/self.end)**2) if i+1 < self.end else 0
+                    brightness = 255-int(255*((i+1)/self.end)**2) if i+1 < self.end else 0 # calculate brightness fade
                     print(f'\x1b[0m\x1b[38;2;0;{brightness};0m\x1b[{self.start-i-1};{self.column}H{char}',end='\b',flush=True)
-            self.characters.insert(0,random.choice(['','','\x1b[1m','\x1b[2m'])+newchar)
-            if self.speed == 2: # if double speed
-                addchar = random.choice(string.printable.strip()) # add an additional character
-                self.characters.insert(1,random.choice(['','','\x1b[1m','\x1b[2m'])+addchar)
-            self.characters = self.characters[:self.end]
-            self.characters.extend([' ',' ']) # add 2 blank spaces to end of list to clear old characters off screen
-        self.start += self.speed 
-        if self.start-len(self.characters) > termH: self.done = True # if end is off screen
+            self.characters.insert(0,random.choice(['','','\x1b[1m','\x1b[2m'])+newchar) # insert newchar, maybe with bold
+            if self.speed == 2: # if this chain is double speed
+                addchar = random.choice(string.printable.strip()) # pick an additional character for double speed
+                self.characters.insert(1,random.choice(['','','\x1b[1m','\x1b[2m'])+addchar) # add it with random formatting
+            self.characters = self.characters[:self.end] # trim list to end length
+            self.characters.extend([' ',' ']) # add 2 blank spaces to end of chain, to erase old characters when printed
+        self.start += self.speed # move start position down by speed amount, to animate
+        if self.start-len(self.characters) > termH: self.done = True # if end is off screen, mark as done, for removal
 
 chains = []
 taken = set()
