@@ -25,7 +25,7 @@ class MatrixColumn:
             for i, char in enumerate(self.characters): # loop through all characters
                 if self.start-i-1 > 0: # if characters are on screen
                     brightness = 1-(i/self.end)**2 if i < self.end else 0 # calculate brightness based on position in chain
-                    r,g,b = hsv2rgb(self.color,1,brightness) # convert HSV to RGB for color fade
+                    r, g, b = hsv2rgb(self.color,1,brightness) # convert HSV to RGB for color fade
                     print(f'\x1b[38;2;{int(r)};{int(g)};{int(b)}m\x1b[{self.start-i-1};{self.column}H{char}',end='\x1b[0m\b',flush=True)
             self.characters.insert(0,random.choice(['','','\x1b[1m','\x1b[2m'])+newchar) # insert newchar, maybe with bold
             if self.speed == 2: # if this chain is double speed
@@ -41,7 +41,7 @@ def hsv2rgb(h, s, v): # convert HSV color values to RGB
     h /= 360. # normalize h to 0-1
     i = int(h*6.) # calculate hue sector 0-5
     f = (h*6.)-i # calculate fractional part of h
-    p,q,t = int(255*(v*(1.-s))), int(255*(v*(1.-s*f))), int(255*(v*(1.-s*(1.-f)))) 
+    p, q, t = int(255*(v*(1.-s))), int(255*(v*(1.-s*f))), int(255*(v*(1.-s*(1.-f))))
     v*=255; i%=6 # calculate RGB values based on sector
     if i == 0: return (v, t, p)
     if i == 1: return (q, v, p)
