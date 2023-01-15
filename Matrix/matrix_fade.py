@@ -12,7 +12,7 @@ class MatrixColumn:
     def __init__(self, column):
         self.column = column
         self.start = -random.randint(0,os.get_terminal_size().lines) # random start position
-        self.end = random.randint(5,os.get_terminal_size().lines) # random end length
+        self.end = random.randint(4,os.get_terminal_size().lines) # random end length
         self.speed = random.choice([1,1,2]) # 1/3 chance of double speed
         self.characters = random.choices(string.printable.strip(),k=self.end) # randomize starting chain of characters
         self.done = False
@@ -20,11 +20,11 @@ class MatrixColumn:
         termH = os.get_terminal_size().lines # get terminal height
         if 0 < self.start <= termH+len(self.characters): # if start is on screen
             newchar = random.choice(string.printable.strip()) # new random character to add
-            print(f'\x1b[0m\x1b[97m\x1b[{self.start};{self.column}H{newchar}',end='\b',flush=True)
+            print(f'\x1b[97m\x1b[{self.start};{self.column}H{newchar}',end='\x1b[0m\b',flush=True)
             for i, char in enumerate(self.characters): # loop through all characters
                 if self.start-i-1 > 0: # if characters are on screen
-                    brightness = 255-int(255*((i+1)/self.end)**2) if i+1 < self.end else 0 # calculate brightness fade
-                    print(f'\x1b[0m\x1b[38;2;0;{brightness};0m\x1b[{self.start-i-1};{self.column}H{char}',end='\b',flush=True)
+                    brightness = 255-int(255*(i/self.end)**2) if i < self.end else 0 # calculate brightness fade
+                    print(f'\x1b[38;2;0;{brightness};0m\x1b[{self.start-i-1};{self.column}H{char}',end='\x1b[0m\b',flush=True)
             self.characters.insert(0,random.choice(['','','\x1b[1m','\x1b[2m'])+newchar) # insert newchar, maybe with bold
             if self.speed == 2: # if this chain is double speed
                 addchar = random.choice(string.printable.strip()) # pick an additional character for double speed
@@ -36,11 +36,11 @@ class MatrixColumn:
 
 chains = []
 taken = set()
-unused = set(range(1,os.get_terminal_size().columns)) # set of unused columns
+unused = set(range(1,os.get_terminal_size().columns+1)) # set of unused columns
 print('\x1b[2J\x1b[?25l') # clear screen and hide cursor
 try:
-    while 1: # main loop
-        FullCols = set(range(1,termW := os.get_terminal_size().columns)) # set of all columns, & store terminal width
+    while True: # main loop
+        FullCols = set(range(1,termW := os.get_terminal_size().columns+1)) # set of all columns, & store terminal width
         if unused.union(taken) != FullCols: unused = FullCols - taken # accounts for terminal resizing
         for i in range(int(termW*DENSITY)-len(chains)): # fill Density% of the terminal width with MatrixColumns
             column = random.choice(list(unused)) # pick a random unused column
@@ -54,4 +54,4 @@ try:
                 if mcol.column <= termW: unused.add(mcol.column) # add now unused column back to unused set
                 chains.remove(mcol) # remove finished MatrixColumn from list
         time.sleep(MOVERATE) # controls the speed of the animation
-except KeyboardInterrupt: print('\x1b[2J\x1b[0m\x1b[?25h') # reset terminal and show cursor on ctrl+c
+except KeyboardInterrupt: print('\x1b[0m\x1b[2J\x1b[?25h') # reset terminal and show cursor on ctrl+c
