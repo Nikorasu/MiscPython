@@ -16,30 +16,30 @@ class MatrixColumn:
         self.start = -random.randint(0,os.get_terminal_size().lines) # random start position
         self.end = self.start-random.randint(3,os.get_terminal_size().lines) # random end position
         self.speed = random.choice([1,1,2]) # 1/3 chance of double speed
+        self.characters = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜｦﾝ'+string.printable.strip() # characters to use
         self.prechar = ''
         self.done = False
     def update(self):
         termH = os.get_terminal_size().lines # get terminal height
         if 0 < self.start <= termH+2: # if start is on screen
-            character = random.choice(string.printable.strip())
+            character = random.choice(self.characters) # choose a random character
             print(f'{HIGHLIGHT}\x1b[{self.start};{self.column}H{character}',end='\b',flush=True)
             print(f'{random.choice(COLOR)}\x1b[{self.start-1};{self.column}H{self.prechar}',end='\b',flush=True)
             if self.speed == 2: # if double speed
-                altchar = random.choice(string.printable.strip())
-                print(f'{random.choice(COLOR)}\x1b[{self.start-1};{self.column}H{altchar}',end='\b',flush=True)
+                addchar = random.choice(self.characters) # choose an additional random character for double speed
+                print(f'{random.choice(COLOR)}\x1b[{self.start-1};{self.column}H{addchar}',end='\b',flush=True)
                 print(f'{random.choice(COLOR)}\x1b[{self.start-2};{self.column}H{self.prechar}',end='\b',flush=True)
             if self.start <= termH: self.prechar = character
         if termH >= self.end > -1: # if end is on screen
             print(f'\x1b[{self.end};{self.column}H ',end='\b',flush=True)
             if self.speed == 2: print(f'\x1b[{self.end+1};{self.column}H ',end='\b',flush=True)
-        self.start += self.speed 
+        self.start += self.speed # update start and end positions
         self.end += self.speed
         if self.end > termH: self.done = True # if end is off screen
 
 chains = []
 taken = set() #unused = set(range(1,os.get_terminal_size().columns)) # set of unused columns
 print('\x1b[2J\x1b[?25l') # clear screen and hide cursor
-
 try:
     while 1: # main loop
         termW = os.get_terminal_size().columns
@@ -53,4 +53,4 @@ try:
                 taken.remove(mcol.column) # remove column from taken set
                 chains.remove(mcol) # then remove it from update list
         time.sleep(MOVERATE) # controls the speed of the animation
-except KeyboardInterrupt: print('\x1b[2J\x1b[0m\x1b[?25h') # reset terminal and show cursor on ctrl+c
+except KeyboardInterrupt: print('\x1b[0m\x1b[2J\x1b[?25h') # reset terminal and show cursor on ctrl+c

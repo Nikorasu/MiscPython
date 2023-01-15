@@ -24,7 +24,8 @@ together in rows, coloring digits which overlap in either 2 or all 3 rows.
 
 This is my version of the classic Matrix code-rain animation, for the terminal.
 Made this as a personal challenge on New Year's, and it turned out pretty nice.
-For now, `Ctrl+C` to quit, but I think I'll try to improve that later.
+I've since made improvements, some alternate versions, and added Japanese kana.
+For now, only way to quit is `Ctrl+C`, but I might try to improve that later.
 
 ---
 
