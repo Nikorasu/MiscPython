@@ -3,7 +3,7 @@
 # A quick program to test the user's typing speed in the terminal by printing random pangrams,
 # and overlapping user input over the same line as they type, green for correct red for incorrect,
 # then when they complete it, the program ends by printing the user's WPM and accuracy.
-# by Nik Stromberg - nikorasu85@gmail.com - MIT 2022 - copilot
+# Copyright (C) 2022 Nik Stromberg - nikorasu85@gmail.com
 
 import tty, termios, sys, time, random
 from difflib import SequenceMatcher

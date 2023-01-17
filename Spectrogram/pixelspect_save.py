@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
-# by Nik Stromberg - nikorasu85@gmail.com - MIT 2022
+
+# Copyright (C) 2022 Nik Stromberg - nikorasu85@gmail.com
 
 from time import strftime
 import sounddevice as sd

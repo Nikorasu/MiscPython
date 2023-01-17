@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # A Rainbow Matrix code-rain terminal animation, with fade effect.
-# by Nik Stromberg - nikorasu85@gmail.com - MIT 2022
+# Copyright (C) 2022 Nik Stromberg - nikorasu85@gmail.com
 
 DENSITY = 0.80 # percentage of terminal width to fill (default 0.80)
 MOVERATE = 0.08 # seconds between updates (default 0.08) lower is faster
