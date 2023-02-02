@@ -25,7 +25,16 @@ together in rows, coloring digits which overlap in either 2 or all 3 rows.
 This is my version of the classic Matrix code-rain animation, for the terminal.
 Made this as a personal challenge on New Year's, and it turned out pretty nice.
 I've since made improvements, some alternate versions, and added Japanese kana.
-Might be Linux only, `Ctrl+C` to quit. Future updates will be in separate git.
+Might be Linux only, `Ctrl+C` to quit. [New version here!](https://github.com/Nikorasu/MatrixCode)
+
+---
+
+## Snake
+
+This is a terminal-based Snake game I made, without using additional libraries.
+It's pretty basic, play area fills the terminal, so resize it to your liking.
+Use arrow keys or wasd to move, `q` to quit.
+To get arrow keys working, Esc key won't work quite right, and needs 3 presses.
 
 ---
 
@@ -51,3 +60,20 @@ If you like my projects and want to help me keep making more,
 please consider donating on [my Ko-fi page](https://ko-fi.com/nik85)! Thanks!
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/F1F4GRRWB)
+
+---
+
+        This program is free software: you can redistribute it and/or modify
+        it under the terms of the GNU General Public License as published by
+        the Free Software Foundation.
+
+        This program is distributed in the hope that it will be useful,
+        but WITHOUT ANY WARRANTY; without even the implied warranty of
+        MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+        GNU General Public License for more details.
+
+        You should have received a copy of the GNU General Public License
+        along with this program.
+        If not, see: https://www.gnu.org/licenses/gpl-3.0.html
+
+Copyright (c) 2022  Nikolaus Stromberg - nikorasu85@gmail.com
