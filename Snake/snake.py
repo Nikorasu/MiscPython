@@ -17,8 +17,8 @@ class NonBlockingInput:
         if os.name == 'posix': termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.oldsettings) # restore terminal settings
     def keypress(self):
         if os.name == 'nt' and kbhit(): # for Windows
-            if (firstCh := getch()) == b'\xe0': return {b"H":"\x1b[A",b"P":"\x1b[B",b"M":"\x1b[C",b"K":"\x1b[D"}[getch()]
-            return firstCh.decode()
+            if (ch := getch()) == b'\xe0': return {b"H":"\x1b[A",b"P":"\x1b[B",b"M":"\x1b[C",b"K":"\x1b[D"}[getch()]
+            return ch.decode()
         elif os.name == 'posix' and sys.stdin in select.select([sys.stdin],[],[],0)[0]: # for Linux
             if (ch := sys.stdin.read(1)) == '\x1b': ch += sys.stdin.read(2) # if escape, read 2 more characters
             return ch
