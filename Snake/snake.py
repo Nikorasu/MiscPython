@@ -42,9 +42,8 @@ def cols(): return os.get_terminal_size().columns
 def rows(): return os.get_terminal_size().lines
 
 def border():
-    print(f'\x1b[38;5;244m\x1b[H{"":\u2588^{cols()}}',end='',flush=True)
-    print(f'\x1b[{rows()};H{"":\u2588^{cols()}}',end='',flush=True)
-    print('\x1b[H'+(f'\u2588\u2588\x1b[{cols()-1}G\u2588\u2588\n'*rows())[:-1],end='\x1b[0m',flush=True)
+    print(f'\x1b[38;5;244m\x1b[H{"":\u2588^{cols()}}\x1b[{rows()};H{"":\u2588^{cols()}}',end='',flush=True) # top & bottom
+    print('\x1b[H'+(f'\u2588\u2588\x1b[{cols()-1}G\u2588\u2588\n'*rows())[:-1],end='\x1b[0m',flush=True) # left & right
 
 class TheSnake:
     def __init__(self):
@@ -86,7 +85,6 @@ def main():
                 if player.gameover: break # if game over, break out of loop
                 border() # draw border
                 time.sleep(.06) # seconds between updates & inputs (.06 seems to be a good balance)
-
     except KeyboardInterrupt: pass # catch Ctrl+C
     finally: print(f'\x1b[0m\x1b[2J\x1b[?25h\x1b[HGame Over! Score: {(player.len-5)//5}') # reset terminal, show cursor, print score
 
