@@ -3,8 +3,8 @@
 # This is a simple terminal-based Snake game!
 # Copyright (C) 2022  Nik Stromberg - nikorasu85@gmail.com
 
-import time, sys, os, random # for randomization, terminal size, timing, arguments & input
-if os.name == 'nt': import msvcrt # for Windows keyboard input
+import time, sys, os, random # for randomization, terminal size, timing
+if os.name == 'nt': from msvcrt import kbhit, getch # for Windows keyboard input
 else: import termios, tty, select # for Linux keyboard input
 
 class NonBlockingInput:
@@ -16,7 +16,9 @@ class NonBlockingInput:
     def __exit__(self,type,val,tb):
         if os.name == 'posix': termios.tcsetattr(sys.stdin, termios.TCSADRAIN, self.oldsettings) # restore terminal settings
     def keypress(self):
-        if os.name == 'nt' and msvcrt.kbhit(): return msvcrt.getch().decode() # for Windows
+        if os.name == 'nt' and kbhit(): # for Windows
+            if (firstCh := getch()) == b'\xe0': return {b"H":"\x1b[A",b"P":"\x1b[B",b"M":"\x1b[C",b"K":"\x1b[D"}[getch()]
+            return firstCh.decode()
         elif os.name == 'posix' and sys.stdin in select.select([sys.stdin],[],[],0)[0]: # for Linux
             ch = sys.stdin.read(1) # read 1 character
             if ch == '\x1b': ch += sys.stdin.read(2) # if escape, read 2 more characters
@@ -43,7 +45,7 @@ class TheSnake:
         self.pos = [os.get_terminal_size().columns//2, os.get_terminal_size().lines//2] # start position
         self.dir = random.choice([(0,-1),(0,1),(-2,0),(2,0)]) # random direction
         self.segments = [self.pos] # list of previous positions
-        self.len = 3 # starting length of snake
+        self.len = 5 # starting length of snake
         self.food = [random.randint(3,os.get_terminal_size().columns-4),random.randint(2,os.get_terminal_size().lines-1)] # random food position
         self.gameover = False
     def update(self,newdir=None):
@@ -86,7 +88,7 @@ def main():
                 time.sleep(.06) # seconds between updates & inputs (.06 seems to be a good balance)
 
     except KeyboardInterrupt: pass # catch Ctrl+C
-    finally: print(f'\x1b[0m\x1b[2J\x1b[?25h\x1b[HGame Over! Score: {(player.len-3)//5}') # reset terminal, show cursor, print score
+    finally: print(f'\x1b[0m\x1b[2J\x1b[?25h\x1b[HGame Over! Score: {(player.len-5)//5}') # reset terminal, show cursor, print score
 
 if __name__ == '__main__':
     main() # by Nik
