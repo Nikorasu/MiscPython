@@ -20,8 +20,7 @@ class NonBlockingInput:
             if (firstCh := getch()) == b'\xe0': return {b"H":"\x1b[A",b"P":"\x1b[B",b"M":"\x1b[C",b"K":"\x1b[D"}[getch()]
             return firstCh.decode()
         elif os.name == 'posix' and sys.stdin in select.select([sys.stdin],[],[],0)[0]: # for Linux
-            ch = sys.stdin.read(1) # read 1 character
-            if ch == '\x1b': ch += sys.stdin.read(2) # if escape, read 2 more characters
+            if (ch := sys.stdin.read(1)) == '\x1b': ch += sys.stdin.read(2) # if escape, read 2 more characters
             return ch
         return None
 
@@ -61,18 +60,17 @@ class TheSnake:
         # check for food
         if self.pos in (self.food,[self.food[0]+1,self.food[1]],[self.food[0]-1,self.food[1]]): # if snake is on food
             self.len += 5 # increase length of snake by 5
-            self.food = [random.randint(3,os.get_terminal_size().columns-4),random.randint(2,os.get_terminal_size().lines-1)] # random food position
+            while (food:=[random.randint(3,os.get_terminal_size().columns-4),random.randint(2,os.get_terminal_size().lines-1)]) in self.segments: pass
+            self.food = food
         # draws
         print(f'\x1b[{self.food[1]};{self.food[0]}H\x1b[38;2;255;0;0m\u2588\u2588',end='',flush=True) # draw food
         for x, y in self.segments: # draw segments
             print(f'\x1b[{y};{x}H\x1b[38;2;{"{};{};{}".format(*self.color)}m\u2588\u2588',end='',flush=True)
 
 def border():
-    print('\x1b[38;5;244m',end='',flush=True) # set color to gray
-    for x in range(os.get_terminal_size().columns): # top & bottom borders
-        print(f'\x1b[1;{x+1}H\u2588\x1b[{os.get_terminal_size().lines};{x+1}H\u2588',end='',flush=True)
-    for y in range(os.get_terminal_size().lines): # left & right borders
-        print(f'\x1b[{y+1};1H\u2588\u2588\x1b[{y+1};{os.get_terminal_size().columns-1}H\u2588\u2588',end='',flush=True)
+    print(f'\x1b[38;5;244m\x1b[H{"":\u2588^{os.get_terminal_size().columns}}',end='',flush=True)
+    print(f'\x1b[{os.get_terminal_size().lines};H{"":\u2588^{os.get_terminal_size().columns}}',end='',flush=True)
+    print('\x1b[H'+(f'\u2588\u2588\x1b[{os.get_terminal_size().columns-1}G\u2588\u2588\n'*os.get_terminal_size().lines)[:-1],end='',flush=True)
 
 def main():
     try:
