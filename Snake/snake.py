@@ -81,9 +81,9 @@ def main():
         directions = {'\x1b[A':(0,-1),'\x1b[B':(0,1),'\x1b[D':(-2,0),'\x1b[C':(2,0),'w':(0,-1),'s':(0,1),'a':(-2,0),'d':(2,0)} # key directions
         with NonBlockingInput() as nbi: # enables non-blocking input
             while (key:=nbi.keypress()) not in ('q','\x1b\x1b\x1b'):# q or ESC quit (Esc x3 due to bug with detecting arrow keys)
-                if player.gameover: break # if game over, break out of loop
                 print('\x1b[0m\x1b[2J',end='',flush=True) # clear screen
                 player.update(directions.get(key)) # update player with the direction of key pressed
+                if player.gameover: break # if game over, break out of loop
                 border() # draw border
                 time.sleep(.06) # seconds between updates & inputs (.06 seems to be a good balance)
 
