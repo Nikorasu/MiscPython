@@ -4,6 +4,7 @@
 # Copyright (C) 2022  Nik Stromberg - nikorasu85@gmail.com
 
 import time, sys, os, random # for randomization, terminal size, timing
+from colorsys import hsv_to_rgb # for converting colors from HSV to RGB
 if os.name == 'nt': from msvcrt import kbhit, getch # for Windows keyboard input
 else: import termios, tty, select # for Linux keyboard input
 
@@ -24,30 +25,16 @@ class NonBlockingInput:
             return ch
         return None
 
-def hsv2rgb(h, s, v): # convert HSV color values to RGB
-    if s == 0.0: v *= 255; return (v, v, v) # if s is 0, return greyscale
-    h /= 360. # normalize h to 0-1
-    i = int(h*6.) # calculate hue sector 0-5
-    f = (h*6.)-i # calculate fractional part of h
-    p, q, t = int(255*(v*(1.-s))), int(255*(v*(1.-s*f))), int(255*(v*(1.-s*(1.-f))))
-    v *= 255; i %= 6 # calculate RGB values based on sector
-    if i == 0: return (v, t, p)
-    if i == 1: return (q, v, p)
-    if i == 2: return (p, v, t)
-    if i == 3: return (p, q, v)
-    if i == 4: return (t, p, v)
-    if i == 5: return (v, p, q)
-
 def cols(): return os.get_terminal_size().columns
 def rows(): return os.get_terminal_size().lines
 
-def border():
-    print(f'\x1b[38;5;244m\x1b[H{"":\u2588^{cols()}}\x1b[{rows()};H{"":\u2588^{cols()}}',end='',flush=True) # top & bottom
-    print('\x1b[H'+(f'\u2588\u2588\x1b[{cols()-1}G\u2588\u2588\n'*rows())[:-1],end='\x1b[0m',flush=True) # left & right
+def border(score):
+    print(f'\x1b[48;5;237m\x1b[H\{f"Score: {score}": ^{cols()}}\x1b[{rows()};H{"": ^{cols()}}',end='',flush=True) # top & bottom
+    print('\x1b[48;5;237m\x1b[H'+(f'  \x1b[{cols()-1}G  \n'*rows())[:-1],end='\x1b[0m',flush=True) # left & right
 
 class TheSnake:
     def __init__(self):
-        self.color = hsv2rgb(random.randint(20,320),1,1) # random color
+        self.color = tuple(int(x*255) for x in hsv_to_rgb(random.randint(20,320)/360,1,1)) # random color using HSV
         self.pos = [cols()//2, rows()//2] # start position
         self.dir = random.choice([(0,-1),(0,1),(-2,0),(2,0)]) # random direction
         self.segments = [self.pos] # list of previous positions
@@ -83,7 +70,7 @@ def main():
                 print('\x1b[0m\x1b[2J',end='',flush=True) # clear screen
                 player.update(directions.get(key)) # update player with the direction of key pressed
                 if player.gameover: break # if game over, break out of loop
-                border() # draw border
+                border((player.len-5)//5) # draw border
                 time.sleep(.06) # seconds between updates & inputs (.06 seems to be a good balance)
     except KeyboardInterrupt: pass # catch Ctrl+C
     finally: print(f'\x1b[0m\x1b[2J\x1b[?25h\x1b[HGame Over! Score: {(player.len-5)//5}') # reset terminal, show cursor, print score
