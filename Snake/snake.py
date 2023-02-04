@@ -53,27 +53,25 @@ class TheSnake:
         self.dir = random.choice([(0,-1),(0,1),(-2,0),(2,0)]) # random direction
         self.segments = [self.pos] # list of previous positions
         self.len = 5 # starting length of snake
-        self.food = [random.randint(3,cols()-4),random.randint(2,rows()-1)] # random food position
+        self.food = [random.randint(3,cols()-3),random.randint(2,rows()-1)] # random food position
         self.gameover = False
     def update(self,newdir=None):
         if newdir and newdir != (-self.dir[0],-self.dir[1]): # if new direction is not opposite of current direction
             self.dir = newdir # update direction
-        # check for collisions
         hitself = [self.pos[0]+self.dir[0],self.pos[1]+self.dir[1]] in self.segments[1:]
         if self.pos[0] in (1,2,cols()-1,cols()-2) or self.pos[1] in (1,rows()) or hitself:
             self.gameover = True; return # if snake hits border or itself, game over
         self.pos[0] += self.dir[0]; self.pos[1] += self.dir[1] # update position
         self.segments.insert(0,self.pos[:]) # add new position to segments
         self.segments = self.segments[:self.len] # remove segments that are too long
-        # check for food
         if self.pos in (self.food,[self.food[0]+1,self.food[1]],[self.food[0]-1,self.food[1]]): # if snake is on food
             self.len += 5 # increase length of snake by 5
-            field = {(x,y) for x in range(3,cols()-2,2) for y in range(2,rows())}
-            field = list(filter(lambda x: x not in self.segments, field))
+            field = {(x,y) for x in range(3,cols()-2) for y in range(2,rows())} # create a set of all possible positions
+            field = list(filter(lambda x: x not in self.segments, field)) # remove positions that are part of the snake
             self.food = list(random.choice(field)) # pick a random position from the remaining positions
-        # draws
+        # Draws the food, and segments of the snake
         print(f'\x1b[{self.food[1]};{self.food[0]}H\x1b[38;2;255;0;0m\u2588\u2588',end='',flush=True) # draw food
-        for x, y in self.segments: # draw segments
+        for x, y in self.segments: # draw snake segments
             print(f'\x1b[{y};{x}H\x1b[38;2;{"{};{};{}".format(*self.color)}m\u2588\u2588',end='',flush=True)
 
 def main():
@@ -85,8 +83,8 @@ def main():
             while (key:=nbi.keypress()) not in ('q','\x1b\x1b\x1b'):# q or ESC quit (Esc x3 due to bug with detecting arrow keys)
                 if player.gameover: break # if game over, break out of loop
                 print('\x1b[0m\x1b[2J',end='',flush=True) # clear screen
-                border() # draw border
                 player.update(directions.get(key)) # update player with the direction of key pressed
+                border() # draw border
                 time.sleep(.06) # seconds between updates & inputs (.06 seems to be a good balance)
 
     except KeyboardInterrupt: pass # catch Ctrl+C
