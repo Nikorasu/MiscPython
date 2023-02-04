@@ -37,22 +37,29 @@ def hsv2rgb(h, s, v): # convert HSV color values to RGB
     if i == 3: return (p, q, v)
     if i == 4: return (t, p, v)
     if i == 5: return (v, p, q)
-    
+
+def tSize(): return (os.get_terminal_size().columns, os.get_terminal_size().lines)
+
+def border():
+    print(f'\x1b[38;5;244m\x1b[H{"":\u2588^{tSize()[0]}}',end='',flush=True)
+    print(f'\x1b[{tSize()[1]};H{"":\u2588^{tSize()[0]}}',end='',flush=True)
+    print('\x1b[H'+(f'\u2588\u2588\x1b[{tSize()[0]-1}G\u2588\u2588\n'*tSize()[1])[:-1],end='\x1b[0m',flush=True)
+
 class TheSnake:
     def __init__(self):
         self.color = hsv2rgb(random.randint(20,320),1,1) # random color
-        self.pos = [os.get_terminal_size().columns//2, os.get_terminal_size().lines//2] # start position
+        self.pos = [tSize()[0]//2, tSize()[1]//2] # start position
         self.dir = random.choice([(0,-1),(0,1),(-2,0),(2,0)]) # random direction
         self.segments = [self.pos] # list of previous positions
         self.len = 5 # starting length of snake
-        self.food = [random.randint(3,os.get_terminal_size().columns-4),random.randint(2,os.get_terminal_size().lines-1)] # random food position
+        self.food = [random.randint(3,tSize()[0]-4),random.randint(2,tSize()[1]-1)] # random food position
         self.gameover = False
     def update(self,newdir=None):
         if newdir and newdir != (-self.dir[0],-self.dir[1]): # if new direction is not opposite of current direction
             self.dir = newdir # update direction
         # check for collisions
         hitself = [self.pos[0]+self.dir[0],self.pos[1]+self.dir[1]] in self.segments[1:]
-        if self.pos[0] in (1,2,os.get_terminal_size().columns-1,os.get_terminal_size().columns-2) or self.pos[1] in (1,os.get_terminal_size().lines) or hitself:
+        if self.pos[0] in (1,2,tSize()[0]-1,tSize()[0]-2) or self.pos[1] in (1,tSize()[1]) or hitself:
             self.gameover = True; return # if snake hits border or itself, game over
         self.pos[0] += self.dir[0]; self.pos[1] += self.dir[1] # update position
         self.segments.insert(0,self.pos[:]) # add new position to segments
@@ -60,17 +67,13 @@ class TheSnake:
         # check for food
         if self.pos in (self.food,[self.food[0]+1,self.food[1]],[self.food[0]-1,self.food[1]]): # if snake is on food
             self.len += 5 # increase length of snake by 5
-            while (food:=[random.randint(3,os.get_terminal_size().columns-4),random.randint(2,os.get_terminal_size().lines-1)]) in self.segments: pass
-            self.food = food
+            field = {(x,y) for y in range(2,tSize()[1]) for x in range(3,tSize()[0]-2,2)}
+            field = list(filter(lambda x: x not in self.segments, field))
+            self.food = list(random.choice(field)) # pick a random position from the remaining positions
         # draws
         print(f'\x1b[{self.food[1]};{self.food[0]}H\x1b[38;2;255;0;0m\u2588\u2588',end='',flush=True) # draw food
         for x, y in self.segments: # draw segments
             print(f'\x1b[{y};{x}H\x1b[38;2;{"{};{};{}".format(*self.color)}m\u2588\u2588',end='',flush=True)
-
-def border():
-    print(f'\x1b[38;5;244m\x1b[H{"":\u2588^{os.get_terminal_size().columns}}',end='',flush=True)
-    print(f'\x1b[{os.get_terminal_size().lines};H{"":\u2588^{os.get_terminal_size().columns}}',end='',flush=True)
-    print('\x1b[H'+(f'\u2588\u2588\x1b[{os.get_terminal_size().columns-1}G\u2588\u2588\n'*os.get_terminal_size().lines)[:-1],end='',flush=True)
 
 def main():
     try:
